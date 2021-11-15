@@ -15,6 +15,7 @@
 			Students Registration System
 		</h3> 
 
+
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 			  <li class="nav-item " role="presentation">
 			    <button class="nav-link <?php if(!isset($_SESSION['sr'])){echo 'active'; } ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
@@ -32,32 +33,98 @@
 			  	<h4>Dashboard</h4>
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStream">
-  Add Strem
-</button>
 
-<!-- Modal -->
-<div class="modal fade" id="addStream" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Add New Stream</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      	<form action="server.php" method="POST">
-      		<input class="form-control" type="text" name="sname">
-      		<br>
-      		<input class="form-control" type="te" name="sdescri">
-      		<br>
-      		<input class="d-flex justify-content-right btn btn-primary w-4" type="submit" name="anstream" value="add" data-bs-dismiss="modal">
-      	</form>
-      </div>
-    </div>
-  </div>
-</div>
+				<!-- Button trigger Add Stream modal -->
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addstream">
+				 Add Stream
+				</button>
 
+				<!-- Add Stream Modal -->
+				<div class="modal fade" id="addstream" tabindex="-1" aria-labelledby="streamModalLaber" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="streamModalLaber">Add Stream</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <form action="server.php" method="POST">
+				        	<input type="text" name="stm_name" placeholder="Stream Name">
+				        	<input type="text" name="stm_descr" placeholder="Description">
+				        	<input type="submit" class="btn btn-primary" name="astd"data-bs-dismiss="modal" value="Save">
+				        </form>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+
+
+
+
+				<!-- Button trigger Enrollment modal -->
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#enrollNow">
+				 Enroll Now
+				</button>
+
+				<!-- Enrollment Modal -->
+				<div class="modal fade" id="enrollNow" tabindex="-1" aria-labelledby="enrollLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="enrollLabel">Enroll Student</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <form action="server.php" method="POST">
+				        	<select class="form-select" aria-label="Default select example" name="stID">
+								  <option selected>Select Students </option>
+
+								  <?php 
+								  		//data for select tag
+								  		$dfst = $dba->prepare("SELECT * FROM students");
+
+								  		$dfst->execute();
+
+								  		foreach ($dfst as $datas) {
+								  		
+								  ?>
+								  <option value="<?php echo $datas[0]; ?>"><?php echo $datas[1]; ?></option>
+
+								  <?php 
+								  		# code...
+								  		}
+								  ?>
+								</select>
+
+								<select class="form-select" aria-label="Default select example" name="strmID">
+								  <option selected>Select Stream</option>
+
+								  <?php 
+								  		//data for stream
+								  		$dfstream = $dba->prepare("SELECT * FROM stream");
+
+								  		$dfstream->execute();
+
+								  		foreach ($dfstream as $streaminfo) {
+								  ?>
+								  <option value="<?php echo $streaminfo[0]; ?>"><?php echo $streaminfo[1]; ?></option>
+
+								  <?php 
+
+								  			
+								  		}
+								  ?>
+								</select>
+
+								<input type="date" class="form-control" name="dateEnrolled">
+
+				        	<input type="submit" class="btn btn-primary" name="esn"data-bs-dismiss="modal" value="Enroll">
+				        </form>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 
 
 
@@ -143,8 +210,47 @@
 			  </div>
 			</div>
 		
+			<?php 
+			if (isset($_SESSION["NewEnrolled"])) {
+			?>
+		<!-- Modal -->
+			<div class="modal fade" id="Notification" tabindex="-1" aria-labelledby="details" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="details">Notification</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <?php 
+			        	echo $_SESSION["NewEnrolled"]; 
+			        	unset($_SESSION["NewEnrolled"]); ?>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+
+			<?php
+
+				}
+			?>
+
 	</div>
+
+
+	
+			
+
+
+
 	<script type="text/javascript" src="js/jquery.js" ></script>
-	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/bootstrap.js"> </script>
+
+	<script type="text/javascript">
+		 $(window).on('load', function() {
+        $('#Notification').modal('show');
+    });
+	</script>
 </body>
 </html>

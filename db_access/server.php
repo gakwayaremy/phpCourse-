@@ -65,6 +65,35 @@
 		}
 	}
 
+
+	function add_new_stream($dba, $strName, $strDesc){
+		
+		$stm = $dba->prepare("INSERT INTO stream(s_name, s_description) VALUE(?,?)");
+		$stm->execute([$strName, $strDesc]);
+
+		if ($stm) {
+			//notification
+			$_SESSION["addStream"] = "Successful";
+		}else{
+			//notification
+			$_SESSION["addStream"] = "Failed";
+		}
+	}
+
+
+	function enroll_new_student($dba, $stID, $streamID, $denrolled){
+		$enow = $dba->prepare("INSERT INTO enrolment(e_student_id, e_stream_id, e_year_enrolled) VALUES (?, ?, ?)");
+
+		$enow->execute([$stID, $streamID, $denrolled]);
+
+		if ($enow->rowCount() > 0) {
+			//notification
+			$_SESSION["NewEnrolled"] = "Student Accepted";
+		}else{
+			//notification
+			$_SESSION["NewEnrolled"] = "Student Denied";
+		}
+	}
 	//add_new_student($dba, "Chibade Ndikumana", "Kasungu - Kwamadzi");
 	//get_all_students($dba);
 	//get_student_by_id($dba, 6);
@@ -75,6 +104,15 @@
 	}
 	elseif (isset($_POST["sp"])) {
 		get_student_by_id($dba, $_POST["search"]);
+		header("Location: ". $_SERVER["HTTP_REFERER"]);
+	}
+	elseif(isset($_POST["astd"])){
+		add_new_stream($dba, $_POST["stm_name"], $_POST["stm_descr"]);
+		header("Location: " . $_SERVER["HTTP_REFERER"]);
+	}
+
+	elseif (isset($_POST["esn"])) {
+		enroll_new_student($dba, $_POST["stID"], $_POST["strmID"], $_POST["dateEnrolled"]);
 		header("Location: ". $_SERVER["HTTP_REFERER"]);
 	}
 
