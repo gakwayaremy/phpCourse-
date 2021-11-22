@@ -1,0 +1,21 @@
+PDO 
+
+Constractor 
+
+types of drive 
+database name 
+username and password 
+
+				types 											username 	password
+$dba = new PDO(	"mysql:host=localhost;dbnme=database_name",	"username",		"password");
+
+
+try and catch 
+
+
+try{
+	
+{"A?":"A","a":5,"d":"B","h":"www.canva.com","c":"DAEszEl0LNo","i":"cBmCwbOO4I6mzHlnt35WiA","b":1634881974705,"A":{"B":{"A":{"A":"MAEthTOJ4UI","B":1},"B":{"A":-5.575177244421013,"B":-206.36050126433634,"D":1486.3605012643368,"C":731.150354488842}},"C":"#0b34e5"},"B":1280,"C":720}
+}catch(Exception $e){
+	
+}

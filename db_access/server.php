@@ -57,11 +57,11 @@
 		$stmt = $dba->prepare("INSERT INTO students(name, location) VALUE(?,?)");
 		$stmt->execute([$stName, $stLocation]);
 
-		if ($stmt) {
-			echo "New student is added";
+		if ($stmt->rowCount() > 0) {
+			$_SESSION['Notification'] =  "New student is added Successful";
 		}
 		else{
-			echo "Failed to add new student";
+			$_SESSION["Notification"] = "Failed to add new student: Verify if is not repeated data.";
 		}
 	}
 
@@ -71,12 +71,10 @@
 		$stm = $dba->prepare("INSERT INTO stream(s_name, s_description) VALUE(?,?)");
 		$stm->execute([$strName, $strDesc]);
 
-		if ($stm) {
-			//notification
-			$_SESSION["addStream"] = "Successful";
+		if ($stm->rowCount() > 0) {
+			$_SESSION["Notification"] = "New Stream is created Successful";
 		}else{
-			//notification
-			$_SESSION["addStream"] = "Failed";
+			$_SESSION["Notification"] = "Failed to create new stream. Verify if it does not exist already in the system";
 		}
 	}
 
@@ -87,11 +85,9 @@
 		$enow->execute([$stID, $streamID, $denrolled]);
 
 		if ($enow->rowCount() > 0) {
-			//notification
-			$_SESSION["NewEnrolled"] = "Student Accepted";
+			$_SESSION["Notification"] = "Student Accepted";
 		}else{
-			//notification
-			$_SESSION["NewEnrolled"] = "Student Denied";
+			$_SESSION["Notification"] = "Student is already enrolled in this stream!";
 		}
 	}
 	//add_new_student($dba, "Chibade Ndikumana", "Kasungu - Kwamadzi");
